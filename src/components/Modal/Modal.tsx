@@ -1,9 +1,13 @@
 import React, { MouseEvent, useContext, useEffect, useRef } from "react";
 import { AppContext } from "../../context/AppContextProvider";
-import { useNavigate } from "react-router-dom";
 
-const Modal = ({ children }: { children: React.ReactNode }) => {
-  const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
+interface IProps {
+  children: React.ReactNode
+  isModalOpen: boolean
+  setIsModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+}
+
+const Modal = ({ children, isModalOpen, setIsModalOpen }: IProps) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
   const modalRef = useRef<HTMLDivElement | null>(null);
 
@@ -11,11 +15,11 @@ const Modal = ({ children }: { children: React.ReactNode }) => {
     e: MouseEvent<HTMLButtonElement | HTMLDivElement>
   ) => {
     if (e.target === containerRef.current && e.target !== modalRef.current) {
-        setIsAuthModalOpen(false)
+      setIsModalOpen(false)
     }
   };
 
-  if (!isAuthModalOpen) return null;
+  if (!isModalOpen) return null;
   return (
     <div
       className="z-30 fixed inset-0 w-full h-screen bg-black/[.50] flex justify-center items-center"
