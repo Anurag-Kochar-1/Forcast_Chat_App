@@ -1,15 +1,37 @@
-import './App.css'
-import { useState } from 'react'
-import Layout from './layout/layout'
+import "./App.css";
+import { useState, useContext, useEffect } from "react";
+import Layout from "./Layout/Layout";
+import { supabase } from "./setup/supabase/client";
+import AppContextProvider, { AppContext } from "./context/AppContextProvider";
+import {
+  SessionContextProvider,
+  useSession,
+  useSupabaseClient,
+} from "@supabase/auth-helpers-react";
+import Modal from "./components/Modal/Modal";
 
 function App() {
-  const [count, setCount] = useState(0)
+  const {isAuthModalOpen,setIsAuthModalOpen} = useContext(AppContext);
 
   return (
-    <Layout>
-      <h1 className='text-7xl'> Hello </h1>
-    </Layout>
-  )
+      <Layout>
+        <button
+          onClick={() => {
+            setIsAuthModalOpen(!isAuthModalOpen)
+            console.log(isAuthModalOpen)
+          }}
+          className="w-32 h-10 border-2 border-black m-5"
+        >
+          Open Modal
+        </button>
+
+        <Modal>
+          <div className="w-72 h-72 bg-white"> {isAuthModalOpen ? "OPEN" : "CLOSE"} </div>
+        </Modal>
+
+
+      </Layout>
+  );
 }
 
-export default App
+export default App;
