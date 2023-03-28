@@ -1,5 +1,4 @@
 import React, { MouseEvent, useContext, useEffect, useRef } from "react";
-import { AppContext } from "../../context/AppContextProvider";
 
 interface IProps {
   children: React.ReactNode
