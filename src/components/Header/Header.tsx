@@ -24,13 +24,22 @@ const Header = () => {
       .required("Password > 4 && Password < 15 "),
   });
 
-  type FormData = yup.InferType<typeof schema>;
+  const signInSchema = yup.object().shape({
+    email: yup.string().email().required("Enter a valid Email"),
+    password: yup
+      .string()
+      .min(4)
+      .max(15)
+      .required("Password > 4 && Password < 15 "),
+  });
+
+  type FormData =  yup.InferType<typeof schema> 
   const {
     register,
     handleSubmit,
     formState: { errors },
   } = useForm<FormData>({
-    resolver: yupResolver(schema),
+    resolver: yupResolver(authType == 'signUp' ? schema : signInSchema),
   });
 
   const onSubmit = async (data: FormData) => {
@@ -49,55 +58,46 @@ const Header = () => {
       </div>
 
       <Modal isModalOpen={isAuthModalOpen} setIsModalOpen={setIsAuthModalOpen}>
-        {authType === "signUp" && (
-          <div className="w-[50vw] h-[40vh] bg-white text-black font-bold text-lg flex flex-col justify-start items-center">
-            <form onSubmit={handleSubmit(onSubmit)}>
+        <div className="w-[50vw]  bg-white text-black font-bold text-lg flex flex-col justify-start items-center">
+          <h4> {authType == "signUp" ? "Create an Account" : "Sign in your account"} </h4>
+          <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col items-center justify-start space-y-2">
+            {authType === 'signUp' && (
               <TextField
-                type="text"
-                placeholder=""
-                label="Username"
-                name="username"
-                registerRef={register}
-                error={errors?.username?.message}
-              />
-              <TextField
-                type="email"
-                placeholder=""
-                label="Email"
-                name="email"
-                registerRef={register}
-                error={errors?.email?.message}
-              />
-              <TextField
-                type="password"
-                placeholder=""
-                label="Password"
-                name="password"
-                registerRef={register}
-                error={errors?.password?.message}
-              />
+              type="text"
+              placeholder=""
+              label="Username"
+              name="username"
+              registerRef={register}
+              error={errors?.username?.message}
+            />
+            )}
+            <TextField
+              type="email"
+              placeholder=""
+              label="Email"
+              name="email"
+              registerRef={register}
+              error={errors?.email?.message}
+            />
+            <TextField
+              type="password"
+              placeholder=""
+              label="Password"
+              name="password"
+              registerRef={register}
+              error={errors?.password?.message}
+            />
 
-              <input
-                type="submit"
-                value="BUTTON"
-                className="w-32 h-10 bg-blue-400"
-              />
-            </form>
-            <span onClick={() => setAuthType("signIn")}>
-              Already an User? Sign in
-            </span>
-          </div>
-        )}
-
-        {authType === "signIn" && (
-          <div className="w-[50vw] h-[40vh] bg-white text-black font-bold text-lg flex flex-col justify-start items-center">
-            Create Account
-            <span onClick={() => setAuthType("signUp")}>
-              {" "}
-              New User? Sign up{" "}
-            </span>
-          </div>
-        )}
+            <input
+              type="submit"
+              value="BUTTON"
+              className="w-32 h-10 bg-blue-400"
+            />
+          </form>
+          <span onClick={() => setAuthType(authType === 'signUp'? "signIn": "signUp")}>
+            Already an User? Sign in
+          </span>
+        </div>
       </Modal>
     </header>
   );
