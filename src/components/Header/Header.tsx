@@ -6,6 +6,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
+import { supabase } from "../../setup/supabase/client";
 
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
@@ -45,8 +46,36 @@ const Header = () => {
     resolver: yupResolver(authType == "signUp" ? schema : signInSchema),
   });
 
+  const createUser = async (userData: any) => {
+    console.log(`createUser is running`)
+    const { data, error } = await supabase.auth.signUp({
+      email: userData?.email,
+      password: userData?.password,
+      options: {
+        data: {
+          username: userData?.username,
+        },
+      },
+    });
+
+    console.log(data)
+    console.log(error)
+  };
+
+  const getUser = async (userData: any) => {
+    console.log(`getUser is running`)
+    const { data, error } = await supabase.auth.signInWithPassword({
+      email: userData?.email,
+      password: userData?.password,
+    })
+    console.log(data)
+    console.log(error)
+  }
+
   const onSubmit = async (data: FormData) => {
     console.log(data);
+    if(authType === 'signUp') createUser(data);
+    else if (authType === 'signIn') getUser(data)
   };
 
   return (
@@ -98,7 +127,10 @@ const Header = () => {
               error={errors?.password?.message}
             />
 
-            <Button type="submit" > {authType === "signUp" ? "Sign In" : "Sign Up"} </Button>
+            <Button type="submit">
+              {" "}
+              {authType === "signUp" ? "Sign In" : "Sign Up"}{" "}
+            </Button>
           </form>
           <span
             onClick={() =>
