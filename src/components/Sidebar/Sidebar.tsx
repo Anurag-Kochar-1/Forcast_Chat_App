@@ -8,6 +8,7 @@ import { Link, useParams, useLocation } from "react-router-dom";
 import { IRoom } from "../../types/rooom";
 import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
 import { AppContext } from "../../context/AppContextProvider";
+import toast from "react-hot-toast";
 
 const Sidebar = () => {
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] =
@@ -17,8 +18,14 @@ const Sidebar = () => {
   const { roomID }: any = useParams();
   const a = useLocation();
 
-  const { isHamBurgerMenuVisible, setIsHamBurgerMenuVisible } =
-    useContext(AppContext);
+  const {
+    userDetails,
+    isHamBurgerMenuVisible,
+    setIsHamBurgerMenuVisible,
+    setIsAuthModalOpen,
+    isAuthModalOpen,
+    
+  } = useContext(AppContext);
 
   const createRoom = async () => {
     const res = await supabase
@@ -28,7 +35,7 @@ const Sidebar = () => {
       })
       .select();
 
-      console.log(res)
+    console.log(res);
 
     setRoomName("");
     setIsCreateRoomModalOpen(false);
@@ -46,10 +53,10 @@ const Sidebar = () => {
 
   const onFormSubmit = (e: any) => {
     e.preventDefault();
-    if( roomName.length !== 0 ) {
+    if (roomName.length !== 0) {
       createRoom();
     } else {
-      alert("Enter Room name")
+      alert("Enter Room name");
     }
   };
 
@@ -71,7 +78,15 @@ const Sidebar = () => {
             />
             <div
               className="h-12 aspect-square bg-brand flex justify-center items-center p-2 rounded-md"
-              onClick={() => setIsCreateRoomModalOpen(!isCreateRoomModalOpen)}
+              onClick={() => {
+                if (userDetails !== null) {
+                  setIsCreateRoomModalOpen(!isCreateRoomModalOpen);
+                } else {
+                  toast.error("Sign in first");
+                  setIsAuthModalOpen(true);
+                  setIsHamBurgerMenuVisible(false)
+                }
+              }}
             >
               <HiPlus color="white" size={"1.3rem"} />
             </div>
@@ -85,7 +100,9 @@ const Sidebar = () => {
                     to={`/room/${room.id}`}
                     key={room.id}
                     className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid`}
-                    onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
+                    onClick={() =>
+                      setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)
+                    }
                   >
                     <span className="text-black">{room.name}</span>
                   </Link>
@@ -98,8 +115,14 @@ const Sidebar = () => {
             setIsModalOpen={setIsCreateRoomModalOpen}
           >
             <div className="p-10 flex flex-col items-center justify-start space-y-3">
-              <h4 className="text-3xl font-medium text-black my-4"> Create a new Chat Room </h4>
-              <form onSubmit={onFormSubmit} className="w-full flex flex-col items-center justify-start space-y-4">
+              <h4 className="text-3xl font-medium text-black my-4">
+                {" "}
+                Create a new Chat Room{" "}
+              </h4>
+              <form
+                onSubmit={onFormSubmit}
+                className="w-full flex flex-col items-center justify-start space-y-4"
+              >
                 <TextField
                   type="text"
                   placeholder=""
@@ -129,7 +152,15 @@ const Sidebar = () => {
             />
             <div
               className="h-12 aspect-square bg-brand flex justify-center items-center p-2 rounded-md"
-              onClick={() => setIsCreateRoomModalOpen(!isCreateRoomModalOpen)}
+              onClick={() => {
+                if (userDetails !== null) {
+                  setIsCreateRoomModalOpen(!isCreateRoomModalOpen);
+                } else {
+                  toast.error("Sign in first");
+                  setIsAuthModalOpen(true);
+                  setIsHamBurgerMenuVisible(false)
+                }
+              }}
             >
               <HiPlus color="white" size={"1.3rem"} />
             </div>
@@ -155,8 +186,14 @@ const Sidebar = () => {
             setIsModalOpen={setIsCreateRoomModalOpen}
           >
             <div className="p-10 flex flex-col items-center justify-start space-y-3">
-              <h4 className="text-3xl font-medium text-black my-4"> Create a new Chat Room </h4>
-              <form onSubmit={onFormSubmit} className="w-full flex flex-col items-center justify-start space-y-4">
+              <h4 className="text-3xl font-medium text-black my-4">
+                {" "}
+                Create a new Chat Room{" "}
+              </h4>
+              <form
+                onSubmit={onFormSubmit}
+                className="w-full flex flex-col items-center justify-start space-y-4"
+              >
                 <TextField
                   type="text"
                   placeholder=""
