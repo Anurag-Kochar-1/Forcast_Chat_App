@@ -32,7 +32,6 @@ const Sidebar = () => {
 
   const fetchAllRooms = async () => {
     const res = await supabase.from("rooms").select();
-    console.log(res);
 
     if (res.status === 200 && res.error === null) {
       setRooms(res?.data);
