@@ -1,10 +1,11 @@
 import React, { useContext } from "react";
 import { AppContext } from "../../context/AppContextProvider";
+import { IMessage } from "../../types/message";
 import Avatar from "../Avatar/Avatar";
 import MenuDropdown from "../MenuDropdown/MenuDropdown";
 
 interface IMessageCard {
-  message: any;
+  message: IMessage;
   deleteMessage: (id: number) => Promise<void>;
 }
 
@@ -17,6 +18,8 @@ const MessageCard = ({ message, deleteMessage }: IMessageCard) => {
           ? "justify-end"
           : "justify-start"
       }  `}
+
+      onClick={() => {console.log(message)}}
     >
       <div className="flex justify-center items-start space-x-2 p-2 m-2">
         {message.sentByUserID !== userDetails?.user?.id && (

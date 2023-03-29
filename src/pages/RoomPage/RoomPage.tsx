@@ -8,11 +8,12 @@ import Avatar from "../../components/Avatar/Avatar";
 import MenuDropdown from "../../components/MenuDropdown/MenuDropdown";
 import Button from "../../components/Button/Button";
 import MessageCard from "../../components/MessageCard/MessageCard";
+import { IMessage } from "../../types/message";
 
 const RoomPage = () => {
   const { roomID } = useParams();
   const [roomDetails, setRoomDetails] = useState<IRoom | null>(null);
-  const [messages, setMessages] = useState<any>([]);
+  const [messages, setMessages] = useState<IMessage[] | any>([]);
   const [messageContent, setMessageContent] = useState<string>("");
   const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const { userDetails, isAuthModalOpen, setIsAuthModalOpen } =
@@ -128,7 +129,7 @@ const RoomPage = () => {
         className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-white py-10 space-y-2"
       >
         {messages &&
-          messages?.map((message: any) => {
+          messages?.map((message: IMessage) => {
             return (
               <MessageCard
                 key={message.id}
