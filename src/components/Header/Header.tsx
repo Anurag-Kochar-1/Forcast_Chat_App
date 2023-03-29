@@ -11,6 +11,7 @@ import { supabase } from "../../setup/supabase/client";
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
   const [authType, setAuthType] = useState<string>("signUp");
+  const {setUserDetails } = useContext(AppContext)
 
   const schema = yup.object().shape({
     username: yup
@@ -74,7 +75,7 @@ const Header = () => {
 
   const signOut = async () =>{ 
     const data = await supabase.auth.signOut()
-    console.log(data)
+    if(data.error === null) setUserDetails({})
   }
 
   const onSubmit = async (data: FormData) => {

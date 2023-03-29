@@ -22,12 +22,12 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [userDetails, setUserDetails] = useState<any>({});
 
   const getUserProfile = async () => {
-    console.log(`getUserProfile is running from AppContextProvider.tsx`);
+    // console.log(`getUserProfile is running from AppContextProvider.tsx`);
     const data = await supabase.auth.getUser();
 
     if (data.error === null && data.data.user) {
-      console.log(`Setting userDetails in context`);
-      console.log(data);
+      // console.log(`Setting userDetails in context`);
+      // console.log(data);
       setUserDetails(data.data.user);
     }
   };

@@ -7,7 +7,9 @@ import { IRoom } from "../../types/rooom";
 const RoomPage = () => {
   const { roomID } = useParams();
   const [roomDetails, setRoomDetails] = useState<IRoom | null>(null);
-  const { userDetails } = useContext(AppContext)
+  const [messages, setMessages] = useState<any>([]);
+  const [messageContent, setMessageContent] = useState <string> ("")
+  const { userDetails } = useContext(AppContext);
 
   const fetchRoom = async () => {
     const res = await supabase.from("rooms").select().eq("id", roomID);
@@ -19,39 +21,70 @@ const RoomPage = () => {
   const sendMessage = async () => {
     const res = await supabase
       .from("messages")
-      .insert({ 
-        content: "asdasd", 
+      .insert({
+        content: messageContent,
         roomID: roomID,
         sentByUsername: "Anurag",
-        sentByUserID: "test-user-uid"
+        sentByUserID: "test-user-uid",
       })
       .select();
 
-      console.log(res)
+    console.log(res);
+
+    setMessageContent("")
   };
 
   const fetchRoomMessages = async () => {
-    const res = await supabase.from("messages").select().eq("roomID", roomID)
+    const res = await supabase.from("messages").select().eq("roomID", roomID);
+    console.log(`fetchRoomMessages`);
     console.log(res)
-  }
+    if (res.error === null) setMessages(res?.data);
+  };
 
-  
+  useEffect(() => {
+    console.log(`------ Second useEffect is running -------`);
+    supabase
+      .channel("any")
+      .on(
+        "postgres_changes",
+        { event: "INSERT", schema: "public", table: "messages",},
+        (payload) => {
+          console.log("Change received!", payload);
+          if(payload.errors === null) {
+            setMessages((prevMessages: any) => [...prevMessages, payload?.new])
+            console.log(messages)
+          }
+        }
+      )
+      .subscribe();
+  }, []);
+
+//  filter: `roomID=eq.${roomID}`
+
 
   useEffect(() => {
     fetchRoom();
+    fetchRoomMessages();
   }, [roomID]);
 
   return (
-    <div className="w-full  bg-green-200 flex flex-col items-center justify-start">
-      {/* <h1 className="text-4xl"> {roomDetails?.name} </h1>
-      <button onClick={() => console.log(roomDetails)} > LOG ROOM DETAILS </button> */}
+    <div className="w-full h-full  flex flex-col items-center justify-between">
+      {/* <h1 className="text-4xl"> {roomDetails?.name} </h1> */}
+      <button onClick={() => console.log(messages)} > LOG MESSAGES </button>
 
-      <div className="w-full flex justify-between items-center p-5">
-        <input type="text" placeholder="Type your message here...." />
+      <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-green-600 py-10">
+        {messages &&
+          messages?.map((message: any) => {
+            return <p key={message.id} className="p-2 m-2 text-2xl font-medium border-2 border-black"> {message.content} </p>;
+          })}
+      </div>
+
+      <div className="w-full flex justify-between items-center p-5 bg-green-200">
+        <input type="text" placeholder="Type your message here...." value={messageContent} onChange={(e: any) => setMessageContent(e.target.value)} />
         <button onClick={sendMessage}>Send</button>
-        <button onClick={fetchRoomMessages}>fetchRoomMessages</button>
 
-        <button onClick={() => console.log(userDetails)}> LOG USER FROM CONTENXT </button>
+        {/* <button onClick={fetchRoomMessages}>fetchRoomMessages</button> */}
+        {/* <button onClick={() => console.log(userDetails)}> LOG USER FROM CONTENXT </button> */}
       </div>
     </div>
   );
