@@ -8,9 +8,9 @@
 5. Delete your messages.
 6. Fully Responsive design.  
 
-# Link
+# Links
 1. Live Site - https://forcast-chat-app.vercel.app/
-2. Product Demo Video - (LOADING.....)
+2. Product Demo Video - https://youtu.be/yAJhX1ZKS2k
 
 # 🌐 Tech stack :
 1. React JS (vite)
