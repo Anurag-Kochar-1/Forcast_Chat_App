@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContextProvider";
 import { supabase } from "../../setup/supabase/client";
@@ -14,9 +14,17 @@ const RoomPage = () => {
   const [roomDetails, setRoomDetails] = useState<IRoom | null>(null);
   const [messages, setMessages] = useState<any>([]);
   const [messageContent, setMessageContent] = useState<string>("");
+  const messagesContainerRef = useRef<HTMLDivElement | null>(null);
   const { userDetails, isAuthModalOpen, setIsAuthModalOpen } =
     useContext(AppContext);
 
+  const scrollToBottom = () => {
+    if (messagesContainerRef.current) {
+      console.log(`scrolllll`);
+      messagesContainerRef.current.scrollTop =
+        messagesContainerRef.current.scrollHeight;
+    }
+  };
   const fetchRoom = async () => {
     const res = await supabase.from("rooms").select().eq("id", roomID);
     // console.log(res);
@@ -39,6 +47,7 @@ const RoomPage = () => {
 
         console.log(res);
         setMessageContent("");
+        scrollToBottom()
       } else {
         alert("Type message");
       }
@@ -111,87 +120,21 @@ const RoomPage = () => {
   return (
     <div className="w-full h-full flex flex-col items-center justify-between">
       <div className="w-full h-16 bg-light flex justify-between items-center py-1 px-2">
-        <span
-          className="font-medium text-xl"
-          onClick={() => console.log(userDetails)}
-        >
-          {roomDetails?.name}
-        </span>
+        <span className="font-medium text-xl">{roomDetails?.name}</span>
       </div>
 
-      <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-white py-10 space-y-2">
+      <div
+        ref={messagesContainerRef}
+        className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-white py-10 space-y-2"
+      >
         {messages &&
           messages?.map((message: any) => {
             return (
-              // <div
-              //   key={message.id}
-              //   className={`w-full flex ${
-              //     message.sentByUserID === userDetails?.user?.id
-              //       ? "justify-end"
-              //       : "justify-start"
-              //   }  `}
-              //   onClick={() => console.log(message)}
-              // >
-              //   <div className="flex justify-center items-center space-x-2 p-2 m-2">
-              //     {message.sentByUserID !== userDetails?.user?.id && (
-              //       <Avatar
-              //         letter={message?.sentByUsername[0]}
-              //         bgColor={
-              //           message.id === userDetails?.user?.id
-              //             ? "bg-[#6E40CE]"
-              //             : "bg-[#FF2D2D]"
-              //         }
-              //       />
-              //     )}
-              //     <div
-              //       className={`p-4 flex justify-center items-center ${
-              //         message.sentByUserID === userDetails?.user?.id
-              //           ? "bg-brand"
-              //           : "bg-light"
-              //       }  rounded-md`}
-              //     >
-              //       <p
-              //         className={`text-base font-normal ${
-              //           message.sentByUserID === userDetails?.user?.id
-              //             ? "text-white"
-              //             : "text-black"
-              //         } `}
-              //       >
-              //         {message.content}
-              //       </p>
-
-              //       {message.sentByUserID === userDetails?.user?.id && (
-              //         <MenuDropdown>
-              //           <div className="py-1">
-              //             <button
-              //               className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
-              //               onClick={() => {
-              //                 deleteMessage(message?.id);
-              //               }}
-              //             >
-              //               Delete
-              //             </button>
-              //           </div>
-              //         </MenuDropdown>
-              //       )}
-              //     </div>
-              //     {message.sentByUserID === userDetails?.user?.id && (
-              //       <Avatar
-              //         letter={message?.sentByUsername[0]}
-              //         bgColor={
-              //           message.id === userDetails?.user?.id
-              //             ? "bg-[#6E40CE]"
-              //             : "bg-[#FF2D2D]"
-              //         }
-              //       />
-              //     )}
-
-              //     {/* <button onClick={() => deleteMessage(message?.id)}>
-              //       Delete
-              //     </button> */}
-              //   </div>
-              // </div>
-              <MessageCard key={message.id} message={message} deleteMessage={deleteMessage} />
+              <MessageCard
+                key={message.id}
+                message={message}
+                deleteMessage={deleteMessage}
+              />
             );
           })}
       </div>
