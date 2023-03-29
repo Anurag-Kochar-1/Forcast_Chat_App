@@ -66,7 +66,7 @@ const TextField = ({
         />
       )}
 
-      {error && <p className="text-red-600"> {error} </p>}
+      {error && <p className="text-red-600 text-sm font-medium"> {error} </p>}
     </div>
   );
 };

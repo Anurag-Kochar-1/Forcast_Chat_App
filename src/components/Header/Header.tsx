@@ -125,25 +125,33 @@ const Header = () => {
 
       <div className="flex justify-center items-center space-x-3">
         {userDetails === null && (
-          <Button variant="SECONDARY" onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
+          <Button
+            variant="SECONDARY"
+            onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}
+          >
             Sign Up
           </Button>
         )}
 
-        {userDetails !== null && <Button variant="SECONDARY" onClick={signOut}> Sign out </Button>}
+        {userDetails !== null && (
+          <Button variant="SECONDARY" onClick={signOut}>
+            {" "}
+            Sign out{" "}
+          </Button>
+        )}
       </div>
 
       <Modal isModalOpen={isAuthModalOpen} setIsModalOpen={setIsAuthModalOpen}>
-        <div className="w-[80vw] sm:w-[60vw] md:w-[40vw] lg:w-[30vw] xl:w-[20vw] bg-white text-black font-bold text-lg flex flex-col justify-start items-center p-4">
-          <h4>
-            {" "}
+        <div className="w-[80vw] sm:w-[60vw] md:w-[40vw] lg:w-[30vw] xl:w-[20vw] bg-white text-black font-bold text-lg flex flex-col justify-start items-center px-4 py-6 overflow-x-hidden overflow-y-auto">
+          <h4 className="text-3xl font-medium text-black my-5">
             {authType == "signUp"
               ? "Create an Account"
               : "Sign in your account"}{" "}
           </h4>
+
           <form
             onSubmit={handleSubmit(onSubmit)}
-            className="flex flex-col items-center justify-start space-y-2"
+            className="flex flex-col items-center justify-start space-y-2 py-5"
           >
             {authType === "signUp" && (
               <TextField
@@ -177,10 +185,12 @@ const Header = () => {
               {authType === "signUp" ? "Sign In" : "Sign Up"}{" "}
             </Button>
           </form>
+
           <span
             onClick={() =>
               setAuthType(authType === "signUp" ? "signIn" : "signUp")
             }
+            className="text-base font-medium hover:cursor-pointer"
           >
             {authType === "signUp"
               ? "Already an User? Sign in"
