@@ -1,29 +1,52 @@
-import React, {useState, createContext} from 'react'
-
+import React, { useState, createContext, useEffect } from "react";
+import { supabase } from "../setup/supabase/client";
 
 export interface IAppContextType {
-    isAuthModalOpen: boolean
-    setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>
+  isAuthModalOpen: boolean;
+  setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  userDetails?: Object;
+  setUserDetails?: any;
 }
 
 const defaultState: IAppContextType = {
-    isAuthModalOpen: false,
-    setIsAuthModalOpen: () => {}
-} 
+  isAuthModalOpen: false,
+  setIsAuthModalOpen: () => {},
+  userDetails: {},
+  setUserDetails: () => {},
+};
 
-export const AppContext = createContext(defaultState)
+export const AppContext = createContext(defaultState);
 
-const AppContextProvider = ( {children}: {children: React.ReactNode} ) => {
-    const [isAuthModalOpen, setIsAuthModalOpen] = useState <boolean> (false)
+const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
+  const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
+  const [userDetails, setUserDetails] = useState<any>({});
 
+  const getUserProfile = async () => {
+    console.log(`getUserProfile is running from AppContextProvider.tsx`);
+    const data = await supabase.auth.getUser();
+
+    if (data.error === null && data.data.user) {
+      console.log(`Setting userDetails in context`);
+      console.log(data);
+      setUserDetails(data.data.user);
+    }
+  };
+
+  useEffect(() => {
+    getUserProfile();
+  }, []);
   return (
-    <AppContext.Provider value={{
+    <AppContext.Provider
+      value={{
         isAuthModalOpen,
-        setIsAuthModalOpen
-    }}>
-        {children}
+        setIsAuthModalOpen,
+        userDetails,
+        setUserDetails,
+      }}
+    >
+      {children}
     </AppContext.Provider>
-  )
-}
+  );
+};
 
-export default AppContextProvider
+export default AppContextProvider;

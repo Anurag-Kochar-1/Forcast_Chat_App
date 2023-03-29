@@ -5,12 +5,9 @@ import TextField from "../TextField/TextField";
 import { HiPlus } from "react-icons/hi";
 import { supabase } from "../../setup/supabase/client";
 import { Link } from "react-router-dom";
+import { IRoom } from "../../types/rooom";
 
-interface IRoom {
-  id: number;
-  created_at: string;
-  name: string;
-}
+
 
 const Sidebar = () => {
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] =
@@ -25,9 +22,11 @@ const Sidebar = () => {
         name: roomName,
       })
       .select();
-
-    console.log(res);
+    
     setRoomName("");
+    setIsCreateRoomModalOpen(false)
+
+    if (res.error === null) setRooms([...rooms, res?.data[0]]);
   };
 
   const fetchAllRooms = async () => {
@@ -60,7 +59,15 @@ const Sidebar = () => {
       <div className="w-full flex flex-col justify-start items-center">
         {rooms &&
           rooms?.map((room: any) => {
-            return <Link to={`/room/${room.id}`} key={room.id} className="p-5 m-2 bg-blue-300">{room.name}</Link>;
+            return (
+              <Link
+                to={`/room/${room.id}`}
+                key={room.id}
+                className="p-5 m-2 bg-blue-300"
+              >
+                {room.name}
+              </Link>
+            );
           })}
       </div>
 

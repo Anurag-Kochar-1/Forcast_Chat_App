@@ -72,6 +72,11 @@ const Header = () => {
     console.log(error)
   }
 
+  const signOut = async () =>{ 
+    const data = await supabase.auth.signOut()
+    console.log(data)
+  }
+
   const onSubmit = async (data: FormData) => {
     console.log(data);
     if(authType === 'signUp') signUp(data);
@@ -86,6 +91,8 @@ const Header = () => {
         <button onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
           Sign Up
         </button>
+
+        <button onClick={signOut}> Sign out </button>
       </div>
 
       <Modal isModalOpen={isAuthModalOpen} setIsModalOpen={setIsAuthModalOpen}>
