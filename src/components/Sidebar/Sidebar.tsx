@@ -9,6 +9,7 @@ import { IRoom } from "../../types/rooom";
 import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
 import { AppContext } from "../../context/AppContextProvider";
 import toast from "react-hot-toast";
+import RoomCard from "../RoomCard/RoomCard";
 
 const Sidebar = () => {
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] =
@@ -96,17 +97,16 @@ const Sidebar = () => {
             {rooms &&
               rooms?.map((room: any) => {
                 return (
-                  <Link
-                    to={`/room/${room.id}`}
+                  <RoomCard
                     key={room.id}
-                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid ${roomCardSelected === room && `border-2 border-brand`}`}
+                    room={room}
+                    roomCardSelected={roomCardSelected}
+                    setRoomCardSelected={setRoomCardSelected}
                     onClick={() => {
                       setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible);
                       setRoomCardSelected(room);
                     }}
-                  >
-                    <span className="text-black">{room.name}</span>
-                  </Link>
+                  />
                 );
               })}
           </div>
@@ -169,18 +169,17 @@ const Sidebar = () => {
 
           <div className="w-full h-full flex flex-col justify-start items-center space-y-3 overflow-x-hidden overflow-y-auto pb-10">
             {rooms &&
-              rooms?.map((room: any) => {
+              rooms?.map((room: IRoom) => {
                 return (
-                  <Link
-                    to={`/room/${room.id}`}
+                  <RoomCard
                     key={room.id}
-                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid ${roomCardSelected === room && `border-2 border-brand`}`}
+                    room={room}
+                    roomCardSelected={roomCardSelected}
+                    setRoomCardSelected={setRoomCardSelected}
                     onClick={() => {
                       setRoomCardSelected(room);
                     }}
-                  >
-                    <span className="text-black">{room.name}</span>
-                  </Link>
+                  />
                 );
               })}
           </div>
