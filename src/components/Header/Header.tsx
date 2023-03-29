@@ -9,11 +9,17 @@ import Button from "../Button/Button";
 import { supabase } from "../../setup/supabase/client";
 import { RxCross1, RxHamburgerMenu } from "react-icons/rx";
 import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
+import { Link } from "react-router-dom";
 
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
   const [authType, setAuthType] = useState<string>("signUp");
-  const { userDetails, setUserDetails, isHamBurgerMenuVisible, setIsHamBurgerMenuVisible } = useContext(AppContext);
+  const {
+    userDetails,
+    setUserDetails,
+    isHamBurgerMenuVisible,
+    setIsHamBurgerMenuVisible,
+  } = useContext(AppContext);
 
   const schema = yup.object().shape({
     username: yup
@@ -92,39 +98,40 @@ const Header = () => {
   };
 
   return (
-    <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-10">
-      {!isHamBurgerMenuVisible ? (
-        <RxHamburgerMenu
-          className="md:hidden w-6 h-6 text-Dark hover:cursor-pointer"
-          onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
-        />
-      ) : (
-        <RxCross1
-          className="md:hidden w-6 h-6 text-Dark hover:cursor-pointer"
-          onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
-        />
-      )}
+    <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-5 md:px-10">
+      <div className="flex justify-center items-center space-x-4">
+        {!isHamBurgerMenuVisible ? (
+          <RxHamburgerMenu
+            className="md:hidden w-6 h-6 text-Dark hover:cursor-pointer"
+            onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
+          />
+        ) : (
+          <RxCross1
+            className="md:hidden w-6 h-6 text-Dark hover:cursor-pointer"
+            onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
+          />
+        )}
 
-      <h1
-        className="text-2xl"
-        onClick={() => {
-          console.log(userDetails);
-        }}
-      >
-        My App
-      </h1>
+        <Link
+          to={`/`}
+          className="text-xl font-semibold text-white"
+          onClick={() => {
+            console.log(userDetails);
+          }}
+        >
+          Anurag Kochar
+        </Link>
+      </div>
 
       <div className="flex justify-center items-center space-x-3">
         {userDetails === null && (
-          <button onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
+          <Button variant="SECONDARY" onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
             Sign Up
-          </button>
+          </Button>
         )}
 
-        {userDetails !== null && <button onClick={signOut}> Sign out </button>}
+        {userDetails !== null && <Button variant="SECONDARY" onClick={signOut}> Sign out </Button>}
       </div>
-
-      
 
       <Modal isModalOpen={isAuthModalOpen} setIsModalOpen={setIsAuthModalOpen}>
         <div className="w-[80vw] sm:w-[60vw] md:w-[40vw] lg:w-[30vw] xl:w-[20vw] bg-white text-black font-bold text-lg flex flex-col justify-start items-center p-4">

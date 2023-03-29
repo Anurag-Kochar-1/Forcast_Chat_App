@@ -102,7 +102,7 @@ const Sidebar = () => {
       </HamBurgerMenu>
 
       {!isHamBurgerMenuVisible && (
-        <aside className="hidden md:inline-flex  flex-col items-center justify-start w-1/4 h-full bg-blue-200">
+        <aside className="hidden md:inline-flex flex-col items-center justify-start w-1/4 lg:w-[20%] xl:w-[15%] h-full bg-white border-r-2 border-r-brand">
           {/* Search bar and Create button */}
           <div className="w-full flex justify-between items-center px-5">
             <input type="search" placeholder="Search..." />

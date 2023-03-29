@@ -15,7 +15,7 @@ interface IButtonProps {
 
 const Button = ({
   children,
-  variant,
+  variant = "PRIMARY",
   size,
   disabled,
   loading,
@@ -28,6 +28,19 @@ const Button = ({
   const isButtonDisabled = () => {
     if (disabled) {
       return `cursor-not-allowed`;
+    }
+  };
+
+  const getButtonVariant = () => {
+    switch (variant) {
+      case "PRIMARY":
+        return `bg-brand text-white`;
+
+      case "SECONDARY":
+        return `bg-lightest text-brand`;
+
+      default:
+        break;
     }
   };
 
@@ -49,16 +62,16 @@ const Button = ({
       type={type}
       onClick={!loading && !disabled ? onClick : null}
       className={`
-            ${getButtonSizes()} p-4 bg-brand text-white flex justify-center items-center rounded-lg space-x-1 
+           ${getButtonVariant()}
+            ${getButtonSizes()} 
             ${isButtonDisabled()}
+            p-4 flex justify-center items-center rounded-lg space-x-1 font-medium text-base
             `}
     >
       {!loading && leftIcon && <span> {leftIcon} </span>}
       {!loading && <span className="font-semibold text-base">{children}</span>}
       {!loading && rightIcon && <span> {rightIcon} </span>}
-      {loading && (
-        <span className="text-lg font-bold animate-pulse">....</span>
-      )}
+      {loading && <span className="text-lg font-bold animate-pulse">....</span>}
     </button>
   );
 };
