@@ -10,9 +10,11 @@ import { supabase } from "../../setup/supabase/client";
 import { RxCross1, RxHamburgerMenu } from "react-icons/rx";
 import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
 import { Link } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast";
 
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
   const [authType, setAuthType] = useState<string>("signUp");
   const {
     userDetails,
@@ -61,29 +63,44 @@ const Header = () => {
   };
 
   const signUp = async (userData: any) => {
-    const res = await supabase.from("users").insert({
-      email: userData?.email,
-      password: userData?.password,
-      username: userData?.username,
-    });
-
-    if (res.status === 409) {
-      alert("Username already exits");
-    }
-
-    if (res.status === 201) {
-      const { data, error } = await supabase.auth.signUp({
+    setIsLoading(true);
+    try {
+      const res = await supabase.from("users").insert({
         email: userData?.email,
         password: userData?.password,
-        options: {
-          data: {
-            username: userData?.username,
-          },
-        },
+        username: userData?.username,
       });
+
+      if (res.status === 409) {
+        toast.error("Username already exits.");
+      }
+
+      if (res.status === 201) {
+        const res = await supabase.auth.signUp({
+          email: userData?.email,
+          password: userData?.password,
+          options: {
+            data: {
+              username: userData?.username,
+            },
+          },
+        });
+
+        if (res.error === null) {
+          toast.success("Account Created");
+        }
+
+        console.log(res);
+      }
+
+      console.log(res);
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("Something went wrong!!!")
     }
 
-    console.log(res);
+    
   };
 
   const signIn = async (userData: any) => {
@@ -109,6 +126,7 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-5 md:px-10">
+      <Toaster />
       <div className="flex justify-center items-center space-x-4">
         {!isHamBurgerMenuVisible ? (
           <RxHamburgerMenu
@@ -136,6 +154,7 @@ const Header = () => {
       <div className="flex justify-center items-center space-x-3">
         {userDetails === null && (
           <Button
+           
             variant="SECONDARY"
             onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}
           >
@@ -190,7 +209,7 @@ const Header = () => {
               error={errors?.password?.message}
             />
 
-            <Button type="submit">
+            <Button type="submit" loading={isLoading}>
               {" "}
               {authType === "signUp" ? "Sign In" : "Sign Up"}{" "}
             </Button>

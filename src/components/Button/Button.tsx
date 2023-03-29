@@ -1,4 +1,5 @@
 import React from "react";
+import { AiOutlineLoading3Quarters } from "react-icons/ai";
 
 interface IButtonProps {
   children: React.ReactNode;
@@ -71,7 +72,7 @@ const Button = ({
       {!loading && leftIcon && <span> {leftIcon} </span>}
       {!loading && <span className="font-semibold text-base">{children}</span>}
       {!loading && rightIcon && <span> {rightIcon} </span>}
-      {loading && <span className="text-lg font-bold animate-pulse">....</span>}
+      {loading && <AiOutlineLoading3Quarters size={"1.2rem"} className="text-white animate-spin" />}
     </button>
   );
 };
