@@ -7,11 +7,13 @@ import * as yup from "yup";
 import TextField from "../TextField/TextField";
 import Button from "../Button/Button";
 import { supabase } from "../../setup/supabase/client";
+import { RxCross1, RxHamburgerMenu } from "react-icons/rx";
+import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
 
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
   const [authType, setAuthType] = useState<string>("signUp");
-  const { userDetails, setUserDetails } = useContext(AppContext);
+  const { userDetails, setUserDetails, isHamBurgerMenuVisible, setIsHamBurgerMenuVisible } = useContext(AppContext);
 
   const schema = yup.object().shape({
     username: yup
@@ -80,7 +82,7 @@ const Header = () => {
 
   const signOut = async () => {
     const data = await supabase.auth.signOut();
-    if (data.error === null) setUserDetails({});
+    if (data.error === null) setUserDetails(null);
   };
 
   const onSubmit = async (data: FormData) => {
@@ -91,6 +93,18 @@ const Header = () => {
 
   return (
     <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-10">
+      {!isHamBurgerMenuVisible ? (
+        <RxHamburgerMenu
+          className="md:hidden w-6 h-6 text-Dark hover:cursor-pointer"
+          onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
+        />
+      ) : (
+        <RxCross1
+          className="md:hidden w-6 h-6 text-Dark hover:cursor-pointer"
+          onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
+        />
+      )}
+
       <h1
         className="text-2xl"
         onClick={() => {
@@ -109,6 +123,8 @@ const Header = () => {
 
         {userDetails !== null && <button onClick={signOut}> Sign out </button>}
       </div>
+
+      
 
       <Modal isModalOpen={isAuthModalOpen} setIsModalOpen={setIsAuthModalOpen}>
         <div className="w-[80vw] sm:w-[60vw] md:w-[40vw] lg:w-[30vw] xl:w-[20vw] bg-white text-black font-bold text-lg flex flex-col justify-start items-center p-4">

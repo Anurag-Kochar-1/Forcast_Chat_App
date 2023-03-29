@@ -6,6 +6,8 @@ export interface IAppContextType {
   setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
   userDetails?: Object;
   setUserDetails?: any;
+  isHamBurgerMenuVisible: boolean;
+  setIsHamBurgerMenuVisible: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const defaultState: IAppContextType = {
@@ -13,6 +15,8 @@ const defaultState: IAppContextType = {
   setIsAuthModalOpen: () => {},
   userDetails: {},
   setUserDetails: () => {},
+  isHamBurgerMenuVisible: false,
+  setIsHamBurgerMenuVisible: () => {},
 };
 
 export const AppContext = createContext(defaultState);
@@ -20,6 +24,8 @@ export const AppContext = createContext(defaultState);
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
   const [userDetails, setUserDetails] = useState<any>(null);
+  const [isHamBurgerMenuVisible, setIsHamBurgerMenuVisible] =
+    useState<boolean>(false);
 
   const getUserProfile = async () => {
     const data = await supabase.auth.getUser();
@@ -41,7 +47,6 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
     });
   }, []);
 
-
   return (
     <AppContext.Provider
       value={{
@@ -49,6 +54,8 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
         setIsAuthModalOpen,
         userDetails,
         setUserDetails,
+        isHamBurgerMenuVisible,
+        setIsHamBurgerMenuVisible,
       }}
     >
       {children}
