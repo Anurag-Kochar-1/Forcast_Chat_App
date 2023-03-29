@@ -14,6 +14,7 @@ const Sidebar = () => {
   const [isCreateRoomModalOpen, setIsCreateRoomModalOpen] =
     useState<boolean>(false);
   const [roomName, setRoomName] = useState<string>("");
+  const [roomCardSelected, setRoomCardSelected] = useState<IRoom | []>([]);
   const [rooms, setRooms] = useState<IRoom[] | any>([]);
   const { roomID }: any = useParams();
   const a = useLocation();
@@ -24,7 +25,6 @@ const Sidebar = () => {
     setIsHamBurgerMenuVisible,
     setIsAuthModalOpen,
     isAuthModalOpen,
-    
   } = useContext(AppContext);
 
   const createRoom = async () => {
@@ -84,7 +84,7 @@ const Sidebar = () => {
                 } else {
                   toast.error("Sign in first");
                   setIsAuthModalOpen(true);
-                  setIsHamBurgerMenuVisible(false)
+                  setIsHamBurgerMenuVisible(false);
                 }
               }}
             >
@@ -99,10 +99,11 @@ const Sidebar = () => {
                   <Link
                     to={`/room/${room.id}`}
                     key={room.id}
-                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid`}
-                    onClick={() =>
-                      setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)
-                    }
+                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid ${roomCardSelected === room && `border-2 border-brand`}`}
+                    onClick={() => {
+                      setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible);
+                      setRoomCardSelected(room);
+                    }}
                   >
                     <span className="text-black">{room.name}</span>
                   </Link>
@@ -158,7 +159,7 @@ const Sidebar = () => {
                 } else {
                   toast.error("Sign in first");
                   setIsAuthModalOpen(true);
-                  setIsHamBurgerMenuVisible(false)
+                  setIsHamBurgerMenuVisible(false);
                 }
               }}
             >
@@ -173,7 +174,10 @@ const Sidebar = () => {
                   <Link
                     to={`/room/${room.id}`}
                     key={room.id}
-                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid`}
+                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid ${roomCardSelected === room && `border-2 border-brand`}`}
+                    onClick={() => {
+                      setRoomCardSelected(room);
+                    }}
                   >
                     <span className="text-black">{room.name}</span>
                   </Link>
