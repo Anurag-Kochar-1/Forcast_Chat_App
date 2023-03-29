@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import { AppContext } from "../../context/AppContextProvider";
 import { supabase } from "../../setup/supabase/client";
 import { IRoom } from "../../types/rooom";
+import { BiSend } from "react-icons/bi";
 
 const RoomPage = () => {
   const { roomID } = useParams();
@@ -77,7 +78,12 @@ const RoomPage = () => {
         },
         (payload) => {
           console.log("DELETE Change received!", payload);
-          if(payload.errors === null) setMessages((prevMessages: any) => prevMessages.filter((message: any) => message.id !== payload.old.id) );
+          if (payload.errors === null)
+            setMessages((prevMessages: any) =>
+              prevMessages.filter(
+                (message: any) => message.id !== payload.old.id
+              )
+            );
         }
       )
       .subscribe();
@@ -113,14 +119,17 @@ const RoomPage = () => {
           })}
       </div>
 
-      <div className="w-full flex justify-between items-center p-5 bg-green-200">
-        <input
-          type="text"
-          placeholder="Type your message here...."
-          value={messageContent}
-          onChange={(e: any) => setMessageContent(e.target.value)}
-        />
-        <button onClick={sendMessage}>Send</button>
+      <div className="w-full flex justify-center items-center bg-white p-2">
+        <div className="w-full h-12 md:h-14 flex justify-center items-center bg-white border-2 rounded-md px-2">
+          <input
+            className="w-full h-full placeholder:text-gray-500 text-black p-2 font-medium outline-none"
+            type="text"
+            placeholder="Type your message here...."
+            value={messageContent}
+            onChange={(e: any) => setMessageContent(e.target.value)}
+          />
+          <BiSend onClick={sendMessage} className="text-gray-500 h-12 md:h-14 text-2xl hover:cursor-pointer"/>
+        </div>
 
         {/* <button onClick={fetchRoomMessages}>fetchRoomMessages</button> */}
         {/* <button onClick={() => console.log(userDetails)}> LOG USER FROM CONTENXT </button> */}
