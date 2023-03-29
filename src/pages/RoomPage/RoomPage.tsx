@@ -5,6 +5,8 @@ import { supabase } from "../../setup/supabase/client";
 import { IRoom } from "../../types/rooom";
 import { BiSend } from "react-icons/bi";
 import Avatar from "../../components/Avatar/Avatar";
+import MenuDropdown from "../../components/MenuDropdown/MenuDropdown";
+import Button from "../../components/Button/Button";
 
 const RoomPage = () => {
   const { roomID } = useParams();
@@ -107,14 +109,12 @@ const RoomPage = () => {
 
   return (
     <div className="w-full h-full flex flex-col items-center justify-between">
-      <div className="w-full h-14 bg-light flex justify-between items-center p-1">
-        {/* <button onClick={() => console.log(messages)}> LOG MESSAGES </button> */}
+      <div className="w-full h-16 bg-light flex justify-between items-center py-1 px-2">
         <span
-          className="font-medium text-base"
+          className="font-medium text-xl"
           onClick={() => console.log(userDetails)}
         >
-          {" "}
-          {roomDetails?.name}{" "}
+          {roomDetails?.name}
         </span>
       </div>
 
@@ -142,8 +142,37 @@ const RoomPage = () => {
                       }
                     />
                   )}
-                  <div className={`p-4 flex justify-center items-center ${message.sentByUserID === userDetails?.user?.id ? "bg-brand" : 'bg-light' }  rounded-md`}>
-                    <p className={`text-base font-normal ${message.sentByUserID === userDetails?.user?.id ? "text-white" : 'text-black' } `}>{message.content}</p>
+                  <div
+                    className={`p-4 flex justify-center items-center ${
+                      message.sentByUserID === userDetails?.user?.id
+                        ? "bg-brand"
+                        : "bg-light"
+                    }  rounded-md`}
+                  >
+                    <p
+                      className={`text-base font-normal ${
+                        message.sentByUserID === userDetails?.user?.id
+                          ? "text-white"
+                          : "text-black"
+                      } `}
+                    >
+                      {message.content}
+                    </p>
+
+                    {message.sentByUserID === userDetails?.user?.id && (
+                      <MenuDropdown>
+                        <div className="py-1">
+                          <button
+                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
+                            onClick={() => {
+                              deleteMessage(message?.id);
+                            }}
+                          >
+                            Delete
+                          </button>
+                        </div>
+                      </MenuDropdown>
+                    )}
                   </div>
                   {message.sentByUserID === userDetails?.user?.id && (
                     <Avatar
