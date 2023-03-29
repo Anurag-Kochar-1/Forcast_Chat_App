@@ -104,12 +104,18 @@ const Sidebar = () => {
       {!isHamBurgerMenuVisible && (
         <aside className="hidden md:inline-flex flex-col items-center justify-start w-1/4 lg:w-[20%] xl:w-[15%] h-full bg-white border-r-2 border-r-brand">
           {/* Search bar and Create button */}
-          <div className="w-full flex justify-between items-center px-5">
-            <input type="search" placeholder="Search..." />
+          <div className="w-full flex justify-center items-center md:px-1 lg:px-5 py-3 bg-blue-300 space-x-2">
+            <input
+              type="search"
+              placeholder="Search..."
+              name="searchBar"
+              className="w-full h-12 bg-white border-2 rounded-md placeholder:text-black text-black p-2 outline-brand font-medium"
+            />
             <div
+              className="h-12 aspect-square bg-brand flex justify-center items-center p-2 rounded-md"
               onClick={() => setIsCreateRoomModalOpen(!isCreateRoomModalOpen)}
             >
-              <HiPlus />
+              <HiPlus color="white" size={"1.3rem"} />
             </div>
           </div>
 
