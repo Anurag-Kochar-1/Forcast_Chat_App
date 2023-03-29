@@ -11,9 +11,14 @@ import { RxCross1, RxHamburgerMenu } from "react-icons/rx";
 import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
 import { Link } from "react-router-dom";
 import toast, { Toaster } from "react-hot-toast";
+import MenuDropdown from "../MenuDropdown/MenuDropdown";
+import Avatar from "../Avatar/Avatar";
+import { AiFillCaretDown } from "react-icons/ai";
 
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
+  const [isChangeUsernameModalOpen, setIsChangeUsernameModalOpen] = useState <boolean> (false)
+  const [updatedUsername, setUpdatedUsername] = useState <string> ("")
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [authType, setAuthType] = useState<string>("signUp");
   const {
@@ -88,7 +93,7 @@ const Header = () => {
 
         if (res.error === null) {
           toast.success("Account Created");
-          setIsAuthModalOpen(false)
+          setIsAuthModalOpen(false);
         }
 
         console.log(res);
@@ -98,10 +103,8 @@ const Header = () => {
       setIsLoading(false);
     } catch (error) {
       setIsLoading(false);
-      toast.error("Something went wrong!!!")
+      toast.error("Something went wrong!!!");
     }
-
-    
   };
 
   const signIn = async (userData: any) => {
@@ -112,6 +115,12 @@ const Header = () => {
     });
     console.log(data);
     console.log(error);
+
+    if(error === null) {
+      toast.success("Signed in successfully")
+      setIsAuthModalOpen(false)
+    }
+    if(error !== null) toast.error("Wrong Credentials")
   };
 
   const signOut = async () => {
@@ -124,6 +133,26 @@ const Header = () => {
     if (authType === "signUp") signUp(data);
     else if (authType === "signIn") signIn(data);
   };
+
+  const getProfileDiv = () => {
+    console.log(`getProfileDiv is running`);
+    return (
+      <div className="flex justify-center items-center space-x-2  cursor-pointer">
+        <Avatar
+          letter={userDetails?.user?.user_metadata?.username[0]}
+          bgColor="bg-[#00D796]"
+        />
+        <span> {userDetails?.user?.user_metadata?.username} </span>
+        <AiFillCaretDown />
+      </div>
+    );
+  };
+
+  const onUpdateUsernameFormSubmit = (e: any) => {
+    e.preventDefault()
+    setIsLoading(true)
+
+  }
 
   return (
     <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-5 md:px-10">
@@ -143,7 +172,7 @@ const Header = () => {
 
         <Link
           to={`/`}
-          className="text-xl font-semibold text-white"
+          className="text-lg md:text-xl font-semibold text-white"
           onClick={() => {
             console.log(userDetails);
           }}
@@ -152,10 +181,9 @@ const Header = () => {
         </Link>
       </div>
 
-      <div className="flex justify-center items-center space-x-3">
+      <div className="flex justify-center items-center space-x-3 px-10">
         {userDetails === null && (
           <Button
-           
             variant="SECONDARY"
             onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}
           >
@@ -164,10 +192,19 @@ const Header = () => {
         )}
 
         {userDetails !== null && (
-          <Button variant="SECONDARY" onClick={signOut}>
-            {" "}
-            Sign out{" "}
-          </Button>
+          <MenuDropdown icon={getProfileDiv()}>
+            <div className="w-full flex flex-col items-center justify-center space-y-2 rounded-md">
+              <button className="w-full p-2 text-black flex justify-center items-center border border-brand font-medium text-base rounded-md" onClick={signOut}>
+                Sign out
+              </button>
+
+              <button className="w-full p-2 text-black flex justify-center items-center border border-brand font-medium text-base rounded-md" onClick={() => {
+                setIsChangeUsernameModalOpen(!isChangeUsernameModalOpen)
+              }}>
+                Change Username
+              </button>
+            </div>
+          </MenuDropdown>
         )}
       </div>
 
@@ -227,6 +264,26 @@ const Header = () => {
               : "New User? Sign Up"}
           </span>
         </div>
+      </Modal>
+
+
+      <Modal isModalOpen={isChangeUsernameModalOpen} setIsModalOpen={setIsChangeUsernameModalOpen}>
+      <div className="p-10 flex flex-col items-center justify-start space-y-3">
+              <h4 className="text-3xl font-medium text-black my-4"> Update your username </h4>
+              <form onSubmit={onUpdateUsernameFormSubmit} className="w-full flex flex-col items-center justify-start space-y-4">
+                <TextField
+                  type="text"
+                  placeholder=""
+                  isSchema={false}
+                  value={updatedUsername}
+                  onChange={(e: any) => setUpdatedUsername(e.target.value)}
+                  name={"updatedUsername"}
+                  label={"Enter new username"}
+                />
+
+                <Button type={"submit"} loading={isLoading}> Update </Button>
+              </form>
+            </div>
       </Modal>
     </header>
   );

@@ -3,9 +3,10 @@ import { BiDotsVerticalRounded } from "react-icons/bi";
 
 interface IMenuDropdown {
   children: React.ReactNode;
+  icon?: any;
 }
 
-const MenuDropdown = ({ children }: IMenuDropdown) => {
+const MenuDropdown = ({ children, icon }: IMenuDropdown) => {
   const [isMenuDropdownOpen, setIsMenuDropdownOpen] = useState<boolean>(false);
 
   const menuRef = useRef<HTMLDivElement>(null);
@@ -27,15 +28,23 @@ const MenuDropdown = ({ children }: IMenuDropdown) => {
   return (
     <div className="relative w-10 h-10 flex justify-center items-center">
       <div className="relative inline-block text-left">
-      <BiDotsVerticalRounded
-        onClick={() => setIsMenuDropdownOpen(!isMenuDropdownOpen)}
-        className="text-xl text-white hover:cursor-pointer"
-      />
+        {!icon && (
+          <BiDotsVerticalRounded
+            onClick={() => setIsMenuDropdownOpen(!isMenuDropdownOpen)}
+            className="text-xl text-white hover:cursor-pointer"
+          />
+        )}
+
+        {icon && (
+          <div onClick={() => setIsMenuDropdownOpen(!isMenuDropdownOpen)}>
+            {icon}
+          </div>
+        )}
 
         {isMenuDropdownOpen && (
           <div
             ref={menuRef}
-            className="origin-top-right absolute right-0 mt-2 w-56 rounded-md shadow-lg bg-white focus:outline-none "
+            className="origin-top-right absolute right-0 mt-2 w-64 rounded-md shadow-lg bg-white focus:outline-none "
           >
             {children}
           </div>

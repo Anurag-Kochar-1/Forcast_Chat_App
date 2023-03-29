@@ -1,7 +1,7 @@
 import React from "react";
 
 interface IAvatar {
-  letter: any;
+  letter: string;
   bgColor?: string
 }
 
