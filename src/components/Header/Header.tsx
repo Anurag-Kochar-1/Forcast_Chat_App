@@ -61,19 +61,29 @@ const Header = () => {
   };
 
   const signUp = async (userData: any) => {
-    console.log(`createUser is running`);
-    const { data, error } = await supabase.auth.signUp({
+    const res = await supabase.from("users").insert({
       email: userData?.email,
       password: userData?.password,
-      options: {
-        data: {
-          username: userData?.username,
-        },
-      },
+      username: userData?.username,
     });
 
-    console.log(data);
-    console.log(error);
+    if (res.status === 409) {
+      alert("Username already exits");
+    }
+
+    if (res.status === 201) {
+      const { data, error } = await supabase.auth.signUp({
+        email: userData?.email,
+        password: userData?.password,
+        options: {
+          data: {
+            username: userData?.username,
+          },
+        },
+      });
+    }
+
+    console.log(res);
   };
 
   const signIn = async (userData: any) => {
@@ -92,7 +102,7 @@ const Header = () => {
   };
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
+    // console.log(data);
     if (authType === "signUp") signUp(data);
     else if (authType === "signIn") signIn(data);
   };
