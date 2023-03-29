@@ -282,7 +282,7 @@ const Header = () => {
 
             <Button type="submit" loading={isLoading}>
               {" "}
-              {authType === "signUp" ? "Sign In" : "Sign Up"}{" "}
+              {authType === "signUp" ? "Sign Up" : "Sign In"}{" "}
             </Button>
           </form>
 
