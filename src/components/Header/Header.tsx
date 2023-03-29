@@ -38,9 +38,9 @@ const Header = () => {
     email: yup.string().email().required("Enter a valid Email"),
     password: yup
       .string()
-      .min(4)
+      .min(6)
       .max(15)
-      .required("Password > 4 && Password < 15 "),
+      .required("Password > 6 && Password < 15 "),
   });
 
   const signInSchema = yup.object().shape({
