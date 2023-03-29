@@ -88,6 +88,7 @@ const Header = () => {
 
         if (res.error === null) {
           toast.success("Account Created");
+          setIsAuthModalOpen(false)
         }
 
         console.log(res);

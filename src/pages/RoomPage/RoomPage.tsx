@@ -7,6 +7,7 @@ import { BiSend } from "react-icons/bi";
 import Avatar from "../../components/Avatar/Avatar";
 import MenuDropdown from "../../components/MenuDropdown/MenuDropdown";
 import Button from "../../components/Button/Button";
+import MessageCard from "../../components/MessageCard/MessageCard";
 
 const RoomPage = () => {
   const { roomID } = useParams();
@@ -98,7 +99,7 @@ const RoomPage = () => {
         }
       )
       .subscribe();
-  }, []);
+  }, [roomID]);
 
   //  filter: `roomID=eq.${roomID}`
 
@@ -122,74 +123,75 @@ const RoomPage = () => {
         {messages &&
           messages?.map((message: any) => {
             return (
-              <div
-                key={message.id}
-                className={`w-full flex ${
-                  message.sentByUserID === userDetails?.user?.id
-                    ? "justify-end"
-                    : "justify-start"
-                }  `}
-                onClick={() => console.log(message)}
-              >
-                <div className="flex justify-center items-center space-x-2 p-2 m-2">
-                  {message.sentByUserID !== userDetails?.user?.id && (
-                    <Avatar
-                      letter={message?.sentByUsername[0]}
-                      bgColor={
-                        message.id === userDetails?.user?.id
-                          ? "bg-[#6E40CE]"
-                          : "bg-[#FF2D2D]"
-                      }
-                    />
-                  )}
-                  <div
-                    className={`p-4 flex justify-center items-center ${
-                      message.sentByUserID === userDetails?.user?.id
-                        ? "bg-brand"
-                        : "bg-light"
-                    }  rounded-md`}
-                  >
-                    <p
-                      className={`text-base font-normal ${
-                        message.sentByUserID === userDetails?.user?.id
-                          ? "text-white"
-                          : "text-black"
-                      } `}
-                    >
-                      {message.content}
-                    </p>
+              // <div
+              //   key={message.id}
+              //   className={`w-full flex ${
+              //     message.sentByUserID === userDetails?.user?.id
+              //       ? "justify-end"
+              //       : "justify-start"
+              //   }  `}
+              //   onClick={() => console.log(message)}
+              // >
+              //   <div className="flex justify-center items-center space-x-2 p-2 m-2">
+              //     {message.sentByUserID !== userDetails?.user?.id && (
+              //       <Avatar
+              //         letter={message?.sentByUsername[0]}
+              //         bgColor={
+              //           message.id === userDetails?.user?.id
+              //             ? "bg-[#6E40CE]"
+              //             : "bg-[#FF2D2D]"
+              //         }
+              //       />
+              //     )}
+              //     <div
+              //       className={`p-4 flex justify-center items-center ${
+              //         message.sentByUserID === userDetails?.user?.id
+              //           ? "bg-brand"
+              //           : "bg-light"
+              //       }  rounded-md`}
+              //     >
+              //       <p
+              //         className={`text-base font-normal ${
+              //           message.sentByUserID === userDetails?.user?.id
+              //             ? "text-white"
+              //             : "text-black"
+              //         } `}
+              //       >
+              //         {message.content}
+              //       </p>
 
-                    {message.sentByUserID === userDetails?.user?.id && (
-                      <MenuDropdown>
-                        <div className="py-1">
-                          <button
-                            className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
-                            onClick={() => {
-                              deleteMessage(message?.id);
-                            }}
-                          >
-                            Delete
-                          </button>
-                        </div>
-                      </MenuDropdown>
-                    )}
-                  </div>
-                  {message.sentByUserID === userDetails?.user?.id && (
-                    <Avatar
-                      letter={message?.sentByUsername[0]}
-                      bgColor={
-                        message.id === userDetails?.user?.id
-                          ? "bg-[#6E40CE]"
-                          : "bg-[#FF2D2D]"
-                      }
-                    />
-                  )}
+              //       {message.sentByUserID === userDetails?.user?.id && (
+              //         <MenuDropdown>
+              //           <div className="py-1">
+              //             <button
+              //               className="w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-100"
+              //               onClick={() => {
+              //                 deleteMessage(message?.id);
+              //               }}
+              //             >
+              //               Delete
+              //             </button>
+              //           </div>
+              //         </MenuDropdown>
+              //       )}
+              //     </div>
+              //     {message.sentByUserID === userDetails?.user?.id && (
+              //       <Avatar
+              //         letter={message?.sentByUsername[0]}
+              //         bgColor={
+              //           message.id === userDetails?.user?.id
+              //             ? "bg-[#6E40CE]"
+              //             : "bg-[#FF2D2D]"
+              //         }
+              //       />
+              //     )}
 
-                  {/* <button onClick={() => deleteMessage(message?.id)}>
-                    Delete
-                  </button> */}
-                </div>
-              </div>
+              //     {/* <button onClick={() => deleteMessage(message?.id)}>
+              //       Delete
+              //     </button> */}
+              //   </div>
+              // </div>
+              <MessageCard key={message.id} message={message} deleteMessage={deleteMessage} />
             );
           })}
       </div>

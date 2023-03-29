@@ -28,6 +28,8 @@ const Sidebar = () => {
       })
       .select();
 
+      console.log(res)
+
     setRoomName("");
     setIsCreateRoomModalOpen(false);
 
