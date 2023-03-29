@@ -44,7 +44,11 @@ const Sidebar = () => {
 
   const onFormSubmit = (e: any) => {
     e.preventDefault();
-    createRoom();
+    if( roomName.length !== 0 ) {
+      createRoom();
+    } else {
+      alert("Enter Room name")
+    }
   };
 
   useEffect(() => {
@@ -91,8 +95,9 @@ const Sidebar = () => {
             isModalOpen={isCreateRoomModalOpen}
             setIsModalOpen={setIsCreateRoomModalOpen}
           >
-            <div className="w-72 h-52 flex flex-col items-center justify-start">
-              <form onSubmit={onFormSubmit}>
+            <div className="p-10 flex flex-col items-center justify-start space-y-3">
+              <h4 className="text-3xl font-medium text-black my-4"> Create a new Chat Room </h4>
+              <form onSubmit={onFormSubmit} className="w-full flex flex-col items-center justify-start space-y-4">
                 <TextField
                   type="text"
                   placeholder=""
@@ -147,8 +152,9 @@ const Sidebar = () => {
             isModalOpen={isCreateRoomModalOpen}
             setIsModalOpen={setIsCreateRoomModalOpen}
           >
-            <div className="w-72 h-52 flex flex-col items-center justify-start">
-              <form onSubmit={onFormSubmit}>
+            <div className="p-10 flex flex-col items-center justify-start space-y-3">
+              <h4 className="text-3xl font-medium text-black my-4"> Create a new Chat Room </h4>
+              <form onSubmit={onFormSubmit} className="w-full flex flex-col items-center justify-start space-y-4">
                 <TextField
                   type="text"
                   placeholder=""
