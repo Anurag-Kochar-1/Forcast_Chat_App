@@ -18,7 +18,7 @@ const HamBurgerMenu = ({ children }: IProps) => {
       } ease-in-out duration-500`}
     >
       <div className="w-full h-20 flex flex-col justify-center items-center px-4 py-4 bg-brand">
-        <div className="w-full flex justify-end items-center space-x-2">
+        <div className="w-full flex justify-start items-center space-x-2">
           {!isHamBurgerMenuVisible ? (
             <div className="flex justify-center items-center w-10 h-10 bg-Darkest rounded-full ">
               <RxHamburgerMenu

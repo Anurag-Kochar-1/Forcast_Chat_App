@@ -54,27 +54,34 @@ const Sidebar = () => {
   return (
     <>
       <HamBurgerMenu>
-        <aside className="flex flex-col items-center justify-start w-full h-full bg-blue-200">
+        <aside className="flex flex-col items-center justify-start w-full h-full bg-white px-2">
           {/* Search bar and Create button */}
-          <div className="w-full flex justify-between items-center px-5">
-            <input type="search" placeholder="Search..." />
+          <div className="w-full flex justify-center items-center md:px-1 lg:px-5 py-3 space-x-2 hover:cursor-pointer">
+            <input
+              type="search"
+              placeholder="Search..."
+              name="searchBar"
+              className="w-full h-12 bg-white border-2 rounded-md placeholder:text-black text-black p-2 outline-brand font-medium"
+            />
             <div
+              className="h-12 aspect-square bg-brand flex justify-center items-center p-2 rounded-md"
               onClick={() => setIsCreateRoomModalOpen(!isCreateRoomModalOpen)}
             >
-              <HiPlus />
+              <HiPlus color="white" size={"1.3rem"} />
             </div>
           </div>
 
-          <div className="w-full flex flex-col justify-start items-center">
+          <div className="w-full h-full flex flex-col justify-start items-center space-y-3 overflow-x-hidden overflow-y-auto pb-10">
             {rooms &&
               rooms?.map((room: any) => {
                 return (
                   <Link
                     to={`/room/${room.id}`}
                     key={room.id}
-                    className="p-5 m-2 bg-blue-300"
+                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid`}
+                    onClick={() => setIsHamBurgerMenuVisible(!isHamBurgerMenuVisible)}
                   >
-                    {room.name}
+                    <span className="text-black">{room.name}</span>
                   </Link>
                 );
               })}
@@ -134,7 +141,6 @@ const Sidebar = () => {
                   </Link>
                 );
               })}
-              
           </div>
 
           <Modal
