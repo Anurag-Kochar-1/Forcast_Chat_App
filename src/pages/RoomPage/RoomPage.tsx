@@ -29,8 +29,8 @@ const RoomPage = () => {
           .insert({
             content: messageContent,
             roomID: roomID,
-            sentByUsername: "Anurag",
-            sentByUserID: "test-user-uid",
+            sentByUsername: userDetails?.user?.user_metadata?.username,
+            sentByUserID: userDetails?.user?.id,
           })
           .select();
 
@@ -118,25 +118,48 @@ const RoomPage = () => {
         </span>
       </div>
 
-      <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-white py-10">
+      <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-white py-10 space-y-2">
         {messages &&
           messages?.map((message: any) => {
             return (
-              <div key={message.id} className="p-2 m-2 space-x-3">
-                <Avatar
-                  letter={userDetails?.user?.user_metadata?.username[0]}
-                  bgColor={
-                    message.id === userDetails?.user?.id
-                      ? "bg-[#6E40CE]"
-                      : "bg-[#FF2D2D]"
-                  }
-                />
-                <p className="text-2xl font-medium border-2 border-black">
-                  {message.content}
-                </p>
-                <button onClick={() => deleteMessage(message?.id)}>
-                  Delete
-                </button>
+              <div
+                key={message.id}
+                className={`w-full flex ${
+                  message.sentByUserID === userDetails?.user?.id
+                    ? "justify-end"
+                    : "justify-start"
+                }  `}
+                onClick={() => console.log(message)}
+              >
+                <div className="flex justify-center items-center space-x-2 p-2 m-2">
+                  {message.sentByUserID !== userDetails?.user?.id && (
+                    <Avatar
+                      letter={message?.sentByUsername[0]}
+                      bgColor={
+                        message.id === userDetails?.user?.id
+                          ? "bg-[#6E40CE]"
+                          : "bg-[#FF2D2D]"
+                      }
+                    />
+                  )}
+                  <div className={`p-4 flex justify-center items-center ${message.sentByUserID === userDetails?.user?.id ? "bg-brand" : 'bg-light' }  rounded-md`}>
+                    <p className={`text-base font-normal ${message.sentByUserID === userDetails?.user?.id ? "text-white" : 'text-black' } `}>{message.content}</p>
+                  </div>
+                  {message.sentByUserID === userDetails?.user?.id && (
+                    <Avatar
+                      letter={message?.sentByUsername[0]}
+                      bgColor={
+                        message.id === userDetails?.user?.id
+                          ? "bg-[#6E40CE]"
+                          : "bg-[#FF2D2D]"
+                      }
+                    />
+                  )}
+
+                  {/* <button onClick={() => deleteMessage(message?.id)}>
+                    Delete
+                  </button> */}
+                </div>
               </div>
             );
           })}
