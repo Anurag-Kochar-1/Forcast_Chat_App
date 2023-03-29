@@ -4,7 +4,7 @@ import Modal from "../Modal/Modal";
 import TextField from "../TextField/TextField";
 import { HiPlus } from "react-icons/hi";
 import { supabase } from "../../setup/supabase/client";
-import { Link } from "react-router-dom";
+import { Link, useParams, useLocation } from "react-router-dom";
 import { IRoom } from "../../types/rooom";
 import HamBurgerMenu from "../HamBurgerMenu/HamBurgerMenu";
 import { AppContext } from "../../context/AppContextProvider";
@@ -14,6 +14,8 @@ const Sidebar = () => {
     useState<boolean>(false);
   const [roomName, setRoomName] = useState<string>("");
   const [rooms, setRooms] = useState<IRoom[] | any>([]);
+  const { roomID }: any = useParams();
+  const a = useLocation();
 
   const { isHamBurgerMenuVisible, setIsHamBurgerMenuVisible } =
     useContext(AppContext);
@@ -104,7 +106,7 @@ const Sidebar = () => {
       {!isHamBurgerMenuVisible && (
         <aside className="hidden md:inline-flex flex-col items-center justify-start w-1/4 lg:w-[20%] xl:w-[15%] h-full bg-white border-r-2 border-r-brand">
           {/* Search bar and Create button */}
-          <div className="w-full flex justify-center items-center md:px-1 lg:px-5 py-3 bg-blue-300 space-x-2">
+          <div className="w-full flex justify-center items-center md:px-1 lg:px-5 py-3 space-x-2 hover:cursor-pointer">
             <input
               type="search"
               placeholder="Search..."
@@ -119,19 +121,20 @@ const Sidebar = () => {
             </div>
           </div>
 
-          <div className="w-full flex flex-col justify-start items-center">
+          <div className="w-full h-full flex flex-col justify-start items-center space-y-3 overflow-x-hidden overflow-y-auto pb-10">
             {rooms &&
               rooms?.map((room: any) => {
                 return (
                   <Link
                     to={`/room/${room.id}`}
                     key={room.id}
-                    className="p-5 m-2 bg-blue-300"
+                    className={`w-full md:w-[90%] p-3 m-1 bg-light rounded-md active:bg-mid`}
                   >
-                    {room.name}
+                    <span className="text-black">{room.name}</span>
                   </Link>
                 );
               })}
+              
           </div>
 
           <Modal
