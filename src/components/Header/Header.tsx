@@ -46,7 +46,7 @@ const Header = () => {
     resolver: yupResolver(authType == "signUp" ? schema : signInSchema),
   });
 
-  const createUser = async (userData: any) => {
+  const signUp = async (userData: any) => {
     console.log(`createUser is running`)
     const { data, error } = await supabase.auth.signUp({
       email: userData?.email,
@@ -62,7 +62,7 @@ const Header = () => {
     console.log(error)
   };
 
-  const getUser = async (userData: any) => {
+  const signIn = async (userData: any) => {
     console.log(`getUser is running`)
     const { data, error } = await supabase.auth.signInWithPassword({
       email: userData?.email,
@@ -74,8 +74,8 @@ const Header = () => {
 
   const onSubmit = async (data: FormData) => {
     console.log(data);
-    if(authType === 'signUp') createUser(data);
-    else if (authType === 'signIn') getUser(data)
+    if(authType === 'signUp') signUp(data);
+    else if (authType === 'signIn') signIn(data)
   };
 
   return (
