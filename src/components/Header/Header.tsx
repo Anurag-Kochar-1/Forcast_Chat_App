@@ -17,8 +17,9 @@ import { AiFillCaretDown } from "react-icons/ai";
 
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
-  const [isChangeUsernameModalOpen, setIsChangeUsernameModalOpen] = useState <boolean> (false)
-  const [updatedUsername, setUpdatedUsername] = useState <string> ("")
+  const [isChangeUsernameModalOpen, setIsChangeUsernameModalOpen] =
+    useState<boolean>(false);
+  const [updatedUsername, setUpdatedUsername] = useState<string>("");
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [authType, setAuthType] = useState<string>("signUp");
   const {
@@ -116,11 +117,11 @@ const Header = () => {
     console.log(data);
     console.log(error);
 
-    if(error === null) {
-      toast.success("Signed in successfully")
-      setIsAuthModalOpen(false)
+    if (error === null) {
+      toast.success("Signed in successfully");
+      setIsAuthModalOpen(false);
     }
-    if(error !== null) toast.error("Wrong Credentials")
+    if (error !== null) toast.error("Wrong Credentials");
   };
 
   const signOut = async () => {
@@ -148,11 +149,37 @@ const Header = () => {
     );
   };
 
-  const onUpdateUsernameFormSubmit = (e: any) => {
-    e.preventDefault()
-    setIsLoading(true)
+  const onUpdateUsernameFormSubmit = async (e: any) => {
+    e.preventDefault();
+    try {
+      setIsLoading(true);
+      const res = await supabase
+        .from("users")
+        .update({ username: updatedUsername })
+        .eq("email", userDetails?.user?.email);
 
-  }
+      console.log(res);
+
+      if (res.status === 204) {
+        const { data, error } = await supabase.auth.updateUser({
+          data: { username: updatedUsername },
+        });
+
+        console.log(data);
+        console.log(error);
+
+        toast.success("Username updated!!!")
+        setIsChangeUsernameModalOpen(false)
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      setIsLoading(false);
+      toast.error("Something went wrong!!");
+      setIsChangeUsernameModalOpen(false)
+      
+    }
+  };
 
   return (
     <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-5 md:px-10">
@@ -194,13 +221,19 @@ const Header = () => {
         {userDetails !== null && (
           <MenuDropdown icon={getProfileDiv()}>
             <div className="w-full flex flex-col items-center justify-center space-y-2 rounded-md">
-              <button className="w-full p-2 text-black flex justify-center items-center border border-brand font-medium text-base rounded-md" onClick={signOut}>
+              <button
+                className="w-full p-2 text-black flex justify-center items-center border border-brand font-medium text-base rounded-md"
+                onClick={signOut}
+              >
                 Sign out
               </button>
 
-              <button className="w-full p-2 text-black flex justify-center items-center border border-brand font-medium text-base rounded-md" onClick={() => {
-                setIsChangeUsernameModalOpen(!isChangeUsernameModalOpen)
-              }}>
+              <button
+                className="w-full p-2 text-black flex justify-center items-center border border-brand font-medium text-base rounded-md"
+                onClick={() => {
+                  setIsChangeUsernameModalOpen(!isChangeUsernameModalOpen);
+                }}
+              >
                 Change Username
               </button>
             </div>
@@ -266,24 +299,35 @@ const Header = () => {
         </div>
       </Modal>
 
+      <Modal
+        isModalOpen={isChangeUsernameModalOpen}
+        setIsModalOpen={setIsChangeUsernameModalOpen}
+      >
+        <div className="p-10 flex flex-col items-center justify-start space-y-3">
+          <h4 className="text-3xl font-medium text-black my-4">
+            {" "}
+            Update your User Name{" "}
+          </h4>
+          <form
+            onSubmit={onUpdateUsernameFormSubmit}
+            className="w-full flex flex-col items-center justify-start space-y-4"
+          >
+            <TextField
+              type="text"
+              placeholder=""
+              isSchema={false}
+              value={updatedUsername}
+              onChange={(e: any) => setUpdatedUsername(e.target.value)}
+              name={"updatedUsername"}
+              label={"Enter new username"}
+            />
 
-      <Modal isModalOpen={isChangeUsernameModalOpen} setIsModalOpen={setIsChangeUsernameModalOpen}>
-      <div className="p-10 flex flex-col items-center justify-start space-y-3">
-              <h4 className="text-3xl font-medium text-black my-4"> Update your username </h4>
-              <form onSubmit={onUpdateUsernameFormSubmit} className="w-full flex flex-col items-center justify-start space-y-4">
-                <TextField
-                  type="text"
-                  placeholder=""
-                  isSchema={false}
-                  value={updatedUsername}
-                  onChange={(e: any) => setUpdatedUsername(e.target.value)}
-                  name={"updatedUsername"}
-                  label={"Enter new username"}
-                />
-
-                <Button type={"submit"} loading={isLoading}> Update </Button>
-              </form>
-            </div>
+            <Button type={"submit"} loading={isLoading}>
+              {" "}
+              Update{" "}
+            </Button>
+          </form>
+        </div>
       </Modal>
     </header>
   );
