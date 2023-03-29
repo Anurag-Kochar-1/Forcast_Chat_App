@@ -19,7 +19,7 @@ export const AppContext = createContext(defaultState);
 
 const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [isAuthModalOpen, setIsAuthModalOpen] = useState<boolean>(false);
-  const [userDetails, setUserDetails] = useState<any>({});
+  const [userDetails, setUserDetails] = useState<any>(null);
 
   const getUserProfile = async () => {
     const data = await supabase.auth.getUser();

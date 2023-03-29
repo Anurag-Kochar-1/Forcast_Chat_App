@@ -11,7 +11,7 @@ import { supabase } from "../../setup/supabase/client";
 const Header = () => {
   const { isAuthModalOpen, setIsAuthModalOpen } = useContext(AppContext);
   const [authType, setAuthType] = useState<string>("signUp");
-  const {setUserDetails } = useContext(AppContext)
+  const { userDetails, setUserDetails } = useContext(AppContext);
 
   const schema = yup.object().shape({
     username: yup
@@ -47,8 +47,13 @@ const Header = () => {
     resolver: yupResolver(authType == "signUp" ? schema : signInSchema),
   });
 
+  const getUser = async () => {
+    const data = await supabase.auth.getUser();
+    console.log(data);
+  };
+
   const signUp = async (userData: any) => {
-    console.log(`createUser is running`)
+    console.log(`createUser is running`);
     const { data, error } = await supabase.auth.signUp({
       email: userData?.email,
       password: userData?.password,
@@ -59,41 +64,50 @@ const Header = () => {
       },
     });
 
-    console.log(data)
-    console.log(error)
+    console.log(data);
+    console.log(error);
   };
 
   const signIn = async (userData: any) => {
-    console.log(`getUser is running`)
+    console.log(`getUser is running`);
     const { data, error } = await supabase.auth.signInWithPassword({
       email: userData?.email,
       password: userData?.password,
-    })
-    console.log(data)
-    console.log(error)
-  }
+    });
+    console.log(data);
+    console.log(error);
+  };
 
-  const signOut = async () =>{ 
-    const data = await supabase.auth.signOut()
-    if(data.error === null) setUserDetails({})
-  }
+  const signOut = async () => {
+    const data = await supabase.auth.signOut();
+    if (data.error === null) setUserDetails({});
+  };
 
   const onSubmit = async (data: FormData) => {
     console.log(data);
-    if(authType === 'signUp') signUp(data);
-    else if (authType === 'signIn') signIn(data)
+    if (authType === "signUp") signUp(data);
+    else if (authType === "signIn") signIn(data);
   };
 
   return (
     <header className="sticky top-0 left-0 w-full h-20 bg-brand text-white flex items-center justify-between z-10 px-10">
-      <h1 className="text-2xl">My App</h1>
+      <h1
+        className="text-2xl"
+        onClick={() => {
+          console.log(userDetails);
+        }}
+      >
+        My App
+      </h1>
 
       <div className="flex justify-center items-center space-x-3">
-        <button onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
-          Sign Up
-        </button>
+        {userDetails === null && (
+          <button onClick={() => setIsAuthModalOpen(!isAuthModalOpen)}>
+            Sign Up
+          </button>
+        )}
 
-        <button onClick={signOut}> Sign out </button>
+        {userDetails !== null && <button onClick={signOut}> Sign out </button>}
       </div>
 
       <Modal isModalOpen={isAuthModalOpen} setIsModalOpen={setIsAuthModalOpen}>
