@@ -1,5 +1,5 @@
 import "./App.css";
-import Layout from "./Layout/Layout";
+import Layout from "./Layouts/Layout";
 import AppRoutes from "./setup/routes-manager/index";
 import { BrowserRouter } from "react-router-dom";
 
