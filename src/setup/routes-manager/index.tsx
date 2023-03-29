@@ -1,5 +1,6 @@
 import React, { lazy, Suspense } from "react";
 import { Routes, Route } from "react-router-dom";
+import {AiOutlineLoading3Quarters} from "react-icons/ai"
 
 const HomePage = lazy(() => import("../../pages/HomePage/HomePage"));
 const RoomPage = lazy(() => import("../../pages/RoomPage/RoomPage"));
@@ -9,7 +10,10 @@ const index = () => {
     <Suspense
       fallback={
         <div className="w-full h-screen bg-white flex justify-center items-center">
-          <h1 className="text-9xl">LOADING...........</h1>
+          <AiOutlineLoading3Quarters
+            size={"2rem"}
+            className="text-brand animate-spin"
+          />
         </div>
       }
     >

@@ -22,7 +22,6 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   const [userDetails, setUserDetails] = useState<any>({});
 
   const getUserProfile = async () => {
-    // console.log(`getUserProfile is running from AppContextProvider.tsx`);
     const data = await supabase.auth.getUser();
 
     if (data.error === null && data.data.user) {
@@ -33,8 +32,16 @@ const AppContextProvider = ({ children }: { children: React.ReactNode }) => {
   };
 
   useEffect(() => {
-    getUserProfile();
+    supabase.auth.onAuthStateChange((_event, session) => {
+      if (session === null) {
+        console.log(session);
+      } else {
+        setUserDetails(session);
+      }
+    });
   }, []);
+
+
   return (
     <AppContext.Provider
       value={{
