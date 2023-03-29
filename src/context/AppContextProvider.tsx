@@ -4,7 +4,7 @@ import { supabase } from "../setup/supabase/client";
 export interface IAppContextType {
   isAuthModalOpen: boolean;
   setIsAuthModalOpen: React.Dispatch<React.SetStateAction<boolean>>;
-  userDetails?: Object;
+  userDetails?: any;
   setUserDetails?: any;
   isHamBurgerMenuVisible: boolean;
   setIsHamBurgerMenuVisible: React.Dispatch<React.SetStateAction<boolean>>;

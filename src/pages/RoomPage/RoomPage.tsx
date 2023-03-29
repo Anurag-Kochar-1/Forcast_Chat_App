@@ -4,13 +4,15 @@ import { AppContext } from "../../context/AppContextProvider";
 import { supabase } from "../../setup/supabase/client";
 import { IRoom } from "../../types/rooom";
 import { BiSend } from "react-icons/bi";
+import Avatar from "../../components/Avatar/Avatar";
 
 const RoomPage = () => {
   const { roomID } = useParams();
   const [roomDetails, setRoomDetails] = useState<IRoom | null>(null);
   const [messages, setMessages] = useState<any>([]);
   const [messageContent, setMessageContent] = useState<string>("");
-  const { userDetails } = useContext(AppContext);
+  const { userDetails, isAuthModalOpen, setIsAuthModalOpen } =
+    useContext(AppContext);
 
   const fetchRoom = async () => {
     const res = await supabase.from("rooms").select().eq("id", roomID);
@@ -20,19 +22,26 @@ const RoomPage = () => {
   };
 
   const sendMessage = async () => {
-    const res = await supabase
-      .from("messages")
-      .insert({
-        content: messageContent,
-        roomID: roomID,
-        sentByUsername: "Anurag",
-        sentByUserID: "test-user-uid",
-      })
-      .select();
+    if (userDetails !== null) {
+      if (messageContent.length !== 0) {
+        const res = await supabase
+          .from("messages")
+          .insert({
+            content: messageContent,
+            roomID: roomID,
+            sentByUsername: "Anurag",
+            sentByUserID: "test-user-uid",
+          })
+          .select();
 
-    console.log(res);
-
-    setMessageContent("");
+        console.log(res);
+        setMessageContent("");
+      } else {
+        alert("Type message");
+      }
+    } else {
+      setIsAuthModalOpen(!isAuthModalOpen);
+    }
   };
 
   const deleteMessage = async (id: number) => {
@@ -97,28 +106,43 @@ const RoomPage = () => {
   }, [roomID]);
 
   return (
-    <div className="w-full h-full  flex flex-col items-center justify-between">
-      {/* <h1 className="text-4xl"> {roomDetails?.name} </h1> */}
-      <button onClick={() => console.log(messages)}> LOG MESSAGES </button>
+    <div className="w-full h-full flex flex-col items-center justify-between">
+      <div className="w-full h-14 bg-light flex justify-between items-center p-1">
+        {/* <button onClick={() => console.log(messages)}> LOG MESSAGES </button> */}
+        <span
+          className="font-medium text-base"
+          onClick={() => console.log(userDetails)}
+        >
+          {" "}
+          {roomDetails?.name}{" "}
+        </span>
+      </div>
 
-      <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-green-600 py-10">
+      <div className="w-full h-full overflow-x-hidden overflow-y-auto flex flex-col items-center justify-start bg-white py-10">
         {messages &&
           messages?.map((message: any) => {
             return (
               <div key={message.id} className="p-2 m-2 space-x-3">
+                <Avatar
+                  letter={userDetails?.user?.user_metadata?.username[0]}
+                  bgColor={
+                    message.id === userDetails?.user?.id
+                      ? "bg-[#6E40CE]"
+                      : "bg-[#FF2D2D]"
+                  }
+                />
                 <p className="text-2xl font-medium border-2 border-black">
-                  {" "}
-                  {message.content}{" "}
+                  {message.content}
                 </p>
                 <button onClick={() => deleteMessage(message?.id)}>
-                  {" "}
-                  Delete{" "}
+                  Delete
                 </button>
               </div>
             );
           })}
       </div>
 
+      {/* MESSAGE INPUT BAR */}
       <div className="w-full flex justify-center items-center bg-white p-2">
         <div className="w-full h-12 md:h-14 flex justify-center items-center bg-white border-2 rounded-md px-2">
           <input
@@ -127,12 +151,17 @@ const RoomPage = () => {
             placeholder="Type your message here...."
             value={messageContent}
             onChange={(e: any) => setMessageContent(e.target.value)}
+            onKeyUp={(e) => {
+              if (e.key === "Enter") {
+                sendMessage();
+              }
+            }}
           />
-          <BiSend onClick={sendMessage} className="text-gray-500 h-12 md:h-14 text-2xl hover:cursor-pointer"/>
+          <BiSend
+            onClick={sendMessage}
+            className="text-gray-500 h-12 md:h-14 text-2xl hover:cursor-pointer"
+          />
         </div>
-
-        {/* <button onClick={fetchRoomMessages}>fetchRoomMessages</button> */}
-        {/* <button onClick={() => console.log(userDetails)}> LOG USER FROM CONTENXT </button> */}
       </div>
     </div>
   );
