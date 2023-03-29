@@ -8,6 +8,10 @@
 5. Delete your messages.
 6. Fully Responsive design.  
 
+# Link
+1. Live Site - https://forcast-chat-app.vercel.app/
+2. Product Demo Video - (LOADING.....)
+
 # 🌐 Tech stack :
 1. React JS (vite)
 2. TypeScript
@@ -76,6 +80,6 @@
 | icon      | Icon to display to open dropdown, Default is 3 vertical dots | ReactNode |
 
 
-## Pages / Routes
-1. HomePage = /
+# 📃 Pages / Routes
+1. HomePage - /
 2. RoomPage (Chat room) - /room/:roomID
