@@ -20,7 +20,6 @@ const RoomPage = () => {
 
   const scrollToBottom = () => {
     if (messagesContainerRef.current) {
-      console.log(`scrolllll`);
       messagesContainerRef.current.scrollTop =
         messagesContainerRef.current.scrollHeight;
     }
@@ -47,7 +46,7 @@ const RoomPage = () => {
 
         console.log(res);
         setMessageContent("");
-        scrollToBottom()
+        scrollToBottom();
       } else {
         alert("Type message");
       }
@@ -113,6 +112,7 @@ const RoomPage = () => {
   //  filter: `roomID=eq.${roomID}`
 
   useEffect(() => {
+    scrollToBottom();
     fetchRoom();
     fetchRoomMessages();
   }, [roomID]);
