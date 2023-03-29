@@ -1,7 +1,20 @@
 # Forcast | Web Dev (frontend) Assignment 2023 by Anurag Kochar
 
+# ✨ Features :
+1. Create with email, password, and Username
+2. Update your username
+3. Create Chat Rooms
+4. Send / recieve messages in realtime inside a room
+5. Delete your messages.
+6. Fully Responsive design.  
 
-## Reusable Components
+# 🌐 Tech stack :
+1. React JS (vite)
+2. TypeScript
+3. Tailwind CSS
+4. Supabase
+
+# 🧱 Reusable Components :
 
 ## Button
 
@@ -61,3 +74,8 @@
 | --------- | ------------------------------------------------------------ | --------- |
 | children* | Options to display in dropdown                               | ReactNode |
 | icon      | Icon to display to open dropdown, Default is 3 vertical dots | ReactNode |
+
+
+## Pages / Routes
+1. HomePage = /
+2. RoomPage (Chat room) - /room/:roomID
