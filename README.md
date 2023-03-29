@@ -1,7 +1,7 @@
 # Forcast | Web Dev (frontend) Assignment 2023 by Anurag Kochar
 
 
-## Components
+## Reusable Components
 
 ## Button
 
@@ -37,5 +37,27 @@
 | isSchema     | Is validation required for this input or not? | boolean  |
 
 
+## Modal
+
+| Prop           | Description                                 | Type                                          |
+| -------------- | ------------------------------------------- | --------------------------------------------- |
+| children*      | Options to display in dropdown              | ReactNode                                     |
+| isModalOpen*   | State to check if the modal is open or not  | boolean (default - false)                     |
+| setIsModalOpen | State update function to open / close modal | React.Dispatch<React.SetStateAction<boolean>> |
 
 
+
+## Avatar
+
+| Prop    | Description                    | Type                       |
+| ------- | ------------------------------ | -------------------------- |
+| letter* | First letter of the username   | string (length === 1)      |
+| bgColor | Background color of the avatar | string (default = #6E40CE) |
+
+
+## MenuDropdown
+
+| Prop      | Description                                                  | Type      |
+| --------- | ------------------------------------------------------------ | --------- |
+| children* | Options to display in dropdown                               | ReactNode |
+| icon      | Icon to display to open dropdown, Default is 3 vertical dots | ReactNode |
